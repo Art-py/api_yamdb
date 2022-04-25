@@ -44,3 +44,7 @@ python manage.py migrate
 ```
 python manage.py runserver
 ```
+
+## документация API:
+
+Документация API доступна по адресу http://127.0.0.1:8000/redoc/
