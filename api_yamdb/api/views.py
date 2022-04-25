@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from rest_framework import filters, viewsets, mixins
 
-# Create your views here.
+
+class CommentViewSet(viewsets.ModelViewSet):
+    ...
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    ...
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    ...
