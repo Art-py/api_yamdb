@@ -39,7 +39,7 @@ class Titles(models.Model):
     year = models.IntegerField()
 
 
-class Сategories(models.Model):
+class Categories(models.Model):
     """Категории: фильмы, книги, музыка и т.д."""
     name = models.CharField(
         max_length=256,
