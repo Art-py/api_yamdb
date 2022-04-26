@@ -25,21 +25,6 @@ class User(AbstractUser):
     role = models.CharField(max_length=9, choices=ROLE_CHOICES, default=USER)
 
 
-class Review(CreateDate):
-    text = models.TextField()
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='reviews'
-    )
-    score = models.IntegerField()
-
-
-class Comment(CreateDate):
-    text = models.TextField()
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='comments'
-    )
-
-
 class Categories(models.Model):
     """Категории: фильмы, книги, музыка и т.д."""
     name = models.CharField(
@@ -84,3 +69,35 @@ class Titles(models.Model):
         on_delete=models.CASCADE,
         related_name='titles'
     )
+
+
+class Review(CreateDate):
+    """Текстовые отзывы к произведениям."""
+    text = models.TextField()
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    score = models.IntegerField()
+    title = models.ForeignKey(
+        Titles,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+
+
+class Comment(CreateDate):
+    """Комментарии к отзывам."""
+    text = models.TextField()
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    review = models.ForeignKey(
+        Review,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    
