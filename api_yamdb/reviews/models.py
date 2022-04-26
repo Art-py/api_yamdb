@@ -2,19 +2,20 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-ROLE = (
-    ('user', 'USER'),
-    ('moderator', 'MODERATOR'),
-    ('admin', 'ADMIN')
-)
-
-
 class User(AbstractUser):
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+    ROLE_CHOICES = [
+        (USER, 'User'),
+        (MODERATOR, 'Moderator'),
+        (ADMIN, 'Admin'),
+    ]
     bio = models.TextField(
         'Биография',
         blank=True
     )
-    role = models.CharField(max_length=9, choices=ROLE, default='user')
+    role = models.CharField(max_length=9, choices=ROLE_CHOICES, default=USER)
 
 
 class Review(models.Model):
