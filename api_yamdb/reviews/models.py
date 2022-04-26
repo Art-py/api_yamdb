@@ -1,9 +1,20 @@
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 
-##### По заданию должна быть другая модель!!!!
-### Изменить модель после получения новой от Артема!!!!!!
-User = get_user_model()
+
+ROLE = (
+    ('user', 'USER'),
+    ('moderator', 'MODERATOR'),
+    ('admin', 'ADMIN')
+)
+
+
+class User(AbstractUser):
+    bio = models.TextField(
+        'Биография',
+        blank=True
+    )
+    role = models.CharField(max_length=9, choices=ROLE, default='user')
 
 
 class Review(models.Model):
