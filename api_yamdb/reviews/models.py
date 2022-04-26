@@ -26,7 +26,7 @@ class User(AbstractUser):
 
 class Review(CreateDate):
     text = models.TextField()
-    author = author = models.ForeignKey(
+    author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='reviews'
     )
     score = models.IntegerField()
