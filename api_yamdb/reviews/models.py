@@ -37,3 +37,8 @@ class Comment(models.Model):
 class Titles(models.Model):
     name = models.TextField()
     year = models.IntegerField()
+    category = models.ForeignKey(
+        Сategories,
+        on_delete=models.CASCADE,
+        related_name='titles'
+    )
