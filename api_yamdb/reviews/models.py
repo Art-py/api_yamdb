@@ -32,3 +32,7 @@ class Comment(models.Model):
         User, on_delete=models.CASCADE, related_name='comments'
     )
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+
+
+class Titles(models.Model):
+    pass
