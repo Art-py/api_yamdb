@@ -35,4 +35,5 @@ class Comment(models.Model):
 
 
 class Titles(models.Model):
-    pass
+    name = models.TextField()
+    year = models.IntegerField()
