@@ -9,6 +9,13 @@ ROLE = (
 )
 
 
+class CreateDate(models.Model):
+    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
 class User(AbstractUser):
     bio = models.TextField(
         'Биография',
@@ -17,21 +24,19 @@ class User(AbstractUser):
     role = models.CharField(max_length=9, choices=ROLE, default='user')
 
 
-class Review(models.Model):
+class Review(CreateDate):
     text = models.TextField()
     author = author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='reviews'
     )
     score = models.IntegerField()
-    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
 
-class Comment(models.Model):
+class Comment(CreateDate):
     text = models.TextField()
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='comments'
     )
-    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
 
 class Titles(models.Model):
