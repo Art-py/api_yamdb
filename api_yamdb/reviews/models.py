@@ -102,4 +102,3 @@ class Comment(CreateDate):
         on_delete=models.CASCADE,
         related_name='comments'
     )
-    
