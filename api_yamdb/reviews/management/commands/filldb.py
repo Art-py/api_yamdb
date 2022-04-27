@@ -26,7 +26,7 @@ class Command(BaseCommand):
         self.add_categories()
         self.add_genres()
         self.add_titles()
-        self.add_title_genre_relations
+        self.add_title_genre_relations()
         self.add_reviews()
         self.add_comments()
         self.stdout.write(self.style.SUCCESS('Данные добавлены'))
