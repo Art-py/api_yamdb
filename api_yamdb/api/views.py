@@ -18,7 +18,6 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-<<<<<<< HEAD
     #    permission_classes = (администратор или чтение)
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -34,10 +33,3 @@ class GenreViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     search_fields = ('=name',)
     lookup_field = 'slug'
-=======
-    ...
-
-
-class GenreViewSet(viewsets.ModelViewSet):
-    ...
->>>>>>> 8592dfa055ba42d0b72019126da191d6261c5f7e
