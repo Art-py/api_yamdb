@@ -11,3 +11,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     ...
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    ...
+
+
+class GenreViewSet(viewsets.ModelViewSet):
+    ...
