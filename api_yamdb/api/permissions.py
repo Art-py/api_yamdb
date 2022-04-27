@@ -3,6 +3,10 @@ from reviews.models import User
 
 
 class IsAuthor(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+
+        return request.user.is_authenticated
     
     def has_object_permission(self, request, view, obj):
 
@@ -11,6 +15,10 @@ class IsAuthor(permissions.BasePermission):
 
 class IsAdmin(permissions.BasePermission):
 
+    def has_permission(self, request, view):
+
+        return request.user.is_authenticated
+
     def has_object_permission(self, request, view, obj):
 
         return request.user.role == User.ADMIN
@@ -18,12 +26,20 @@ class IsAdmin(permissions.BasePermission):
 
 class IsModerator(permissions.BasePermission):
 
+    def has_permission(self, request, view):
+
+        return request.user.is_authenticated
+
     def has_object_permission(self, request, view, obj):
 
         return request.user.role == User.MODERATOR
 
 
 class IsReadOnly(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+
+        return request.method in permissions.SAFE_METHODS
 
     def has_object_permission(self, request, view, obj):
 
