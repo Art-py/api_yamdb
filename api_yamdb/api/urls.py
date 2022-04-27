@@ -25,19 +25,18 @@ router_v1.register(
     TitleViewSet,
     basename='titles'
 )
-router.register(
+router_v1.register(
     'categories',
     CategoryViewSet,
     basename='Category'
 )
 
-router.register(
+router_v1.register(
     'genres',
     GenreViewSet,
     basename='Genre'
 )
 
-router. register()
 urlpatterns = [
     path('v1/', include(router_v1.urls)),
 ]
