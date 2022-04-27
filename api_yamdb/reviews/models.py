@@ -25,7 +25,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=9, choices=ROLE_CHOICES, default=USER)
 
 
-class Categories(models.Model):
+class Category(models.Model):
     """Категории: фильмы, книги, музыка и т.д."""
     name = models.CharField(
         max_length=256,
@@ -43,7 +43,7 @@ class Categories(models.Model):
         return self.slug
 
 
-class Genres(models.Model):
+class Genre(models.Model):
     """Жанры произведений"""
     name = models.CharField(
         max_length=256,
@@ -61,7 +61,7 @@ class Genres(models.Model):
         return self.slug
 
 
-class Titles(models.Model):
+class Title(models.Model):
     name = models.TextField()
     year = models.IntegerField()
     category = models.ForeignKey(
