@@ -69,6 +69,7 @@ class Titles(models.Model):
         on_delete=models.CASCADE,
         related_name='titles'
     )
+    genre = models.ManyToManyField(Genres)
 
 
 class Review(CreateDate):
