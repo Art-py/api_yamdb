@@ -34,14 +34,9 @@ class ReviewSerializer(serializers.ModelSerializer):
     pass
 
 
-class DictSerializer(serializers.Serializer):
-    name = serializers.StringRelatedField(read_only=True)
-    slug = serializers.StringRelatedField(read_only=True)
-
-
 class TitlesSerializer(serializers.ModelSerializer):
-    genre = DictSerializer(many=True, read_only=True)
-    category = DictSerializer(read_only=True)
+    genre = GenreSerializer(many=True, read_only=True)
+    category = CategorySerializer(read_only=True)
 
     class Meta:
         fields = ('id',
