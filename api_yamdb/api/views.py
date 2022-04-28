@@ -32,7 +32,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    #    permission_classes = (администратор или чтение)
+    permission_classes = (IsAdmin, IsReadOnly,)
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
@@ -41,7 +41,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class GenreViewSet(viewsets.ModelViewSet):
-    #    permission_classes = (администратор или чтение)
+    permission_classes = (IsAdmin, IsReadOnly,)
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
