@@ -64,8 +64,8 @@ class Genre(models.Model):
 class Title(models.Model):
     name = models.TextField()
     year = models.IntegerField()
-    description = models.TextField()
-    rating = models.FloatField()
+    description = models.TextField(blank=True)
+    rating = models.FloatField(null=True)
     genre = models.ManyToManyField(Genre)
     category = models.ForeignKey(
         Category,
