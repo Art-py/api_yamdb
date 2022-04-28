@@ -2,7 +2,21 @@ import datetime as dt
 
 from rest_framework import serializers
 
-from reviews.models import Comment, Title
+from reviews.models import Category, Genre,  Comment, Title
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    """Сериализатор для категорий"""
+    class Meta:
+        model = Category
+        exclude = ('id',)
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    """Сериализатор для жанров"""
+    class Meta:
+        model = Genre
+        exclude = ('id',)
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -20,9 +34,14 @@ class ReviewSerializer(serializers.ModelSerializer):
     pass
 
 
+class DictSerializer(serializers.Serializer):
+    name = serializers.StringRelatedField(read_only=True)
+    slug = serializers.StringRelatedField(read_only=True)
+
+
 class TitlesSerializer(serializers.ModelSerializer):
-    genre = serializers.StringRelatedField(many=True, read_only=True)
-    category = serializers.StringRelatedField(many=True, read_only=True)
+    genre = DictSerializer(many=True, read_only=True)
+    category = DictSerializer(read_only=True)
 
     class Meta:
         fields = ('id',
