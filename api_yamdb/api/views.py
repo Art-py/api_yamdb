@@ -8,7 +8,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from .serializers import CommentSerializer, ReviewSerializer, CategorySerializer, GenreSerializer, SimpleUserSerializer, TokenRequestSerializer
+from .serializers import CommentSerializer, ReviewSerializer, CategorySerializer, GenreSerializer, SimpleUserSerializer, TokenRequestSerializer, FullUserSerializer
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
 from reviews.models import Category, Genre, Comment, Review, Title
 from .utils import generate_confirmation_code
@@ -50,6 +50,13 @@ def token(request):
     )
     token = AccessToken.for_user(user)
     return Response({'token': str(token)})
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    model = User
+    serializer_class = FullUserSerializer
+    queryset = User.objects.all()
+    permission_classes = [IsAdmin]
 
 
 class CommentViewSet(viewsets.ModelViewSet):
