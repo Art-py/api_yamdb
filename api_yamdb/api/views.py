@@ -4,7 +4,11 @@ from rest_framework import filters, viewsets, mixins
 from rest_framework import permissions
 from rest_framework.pagination import LimitOffsetPagination
 
-from .serializers import CommentSerializer, ReviewSerializer, CategorySerializer, GenreSerializer, TitlesSerializer
+from .serializers import (CommentSerializer,
+                          ReviewSerializer,
+                          CategorySerializer,
+                          GenreSerializer,
+                          TitlesSerializer)
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
 from reviews.models import Category, Genre, Comment, Review, Title
 
@@ -28,7 +32,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsReadOnly, IsAdmin, )
+    permission_classes = (IsReadOnly | IsAdmin, )
     queryset = Title.objects.all()
     serializer_class = TitlesSerializer
     filter_backends = (DjangoFilterBackend,)
