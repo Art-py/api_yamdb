@@ -29,13 +29,13 @@ router_v1.register(
 router_v1.register(
     'categories',
     CategoryViewSet,
-    basename='Category'
+    basename='Categories'
 )
 
 router_v1.register(
     'genres',
     GenreViewSet,
-    basename='Genre'
+    basename='Genres'
 )
 
 urlpatterns = [
