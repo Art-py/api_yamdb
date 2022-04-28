@@ -1,8 +1,10 @@
+import datetime as dt
+
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from reviews.models import Category, Genre,  Comment
+from reviews.models import Category, Genre,  Comment, Title
 
 User = get_user_model()
 
@@ -80,3 +82,26 @@ class CommentSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     pass
 
+
+class TitlesSerializer(serializers.ModelSerializer):
+    genre = GenreSerializer(many=True, read_only=True)
+    category = CategorySerializer(read_only=True)
+
+    class Meta:
+        fields = ('id',
+                  'name',
+                  'year',
+                  'rating',
+                  'description',
+                  'genre',
+                  'category'
+                  )
+        model = Title
+
+    def validate_year(self, value):
+        year = dt.date.today().year
+        if value > year:
+            raise serializers.ValidationError(
+                'Проверьте год выхода произведения!'
+            )
+        return value

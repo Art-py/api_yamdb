@@ -8,7 +8,16 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from .serializers import CommentSerializer, ReviewSerializer, CategorySerializer, GenreSerializer, SimpleUserSerializer, TokenRequestSerializer, FullUserSerializer
+from .serializers import (
+    CategorySerializer,
+    CommentSerializer,
+    FullUserSerializer,
+    GenreSerializer,
+    ReviewSerializer,
+    SimpleUserSerializer,
+    TitlesSerializer,
+    TokenRequestSerializer,
+)
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
 from reviews.models import Category, Genre, Comment, Review, Title
 from .utils import generate_confirmation_code
@@ -78,7 +87,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    pass
+    permission_classes = (IsReadOnly | IsAdmin, )
+    queryset = Title.objects.all()
+    serializer_class = TitlesSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('name', 'year', 'genre__slug', 'category__slug')
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

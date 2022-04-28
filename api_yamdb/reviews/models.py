@@ -69,13 +69,15 @@ class Genre(models.Model):
 class Title(models.Model):
     name = models.TextField()
     year = models.IntegerField()
+    description = models.TextField(blank=True)
+    rating = models.FloatField(null=True)
+    genre = models.ManyToManyField(Genre)
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
         related_name='titles',
         null=True
     )
-    genre = models.ManyToManyField(Genre)
 
 
 class Review(CreateDate):

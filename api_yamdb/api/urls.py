@@ -28,11 +28,7 @@ router_v1.register(
     ReviewViewSet,
     basename='reviews'
 )
-router_v1.register(
-    'titles',
-    TitleViewSet,
-    basename='titles'
-)
+router_v1.register('titles', TitleViewSet, basename='titles')
 
 router_v1.register(
     'categories',
