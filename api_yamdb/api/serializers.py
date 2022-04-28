@@ -1,3 +1,5 @@
+import datetime as dt
+
 from rest_framework import serializers
 
 from reviews.models import Comment, Title
@@ -19,7 +21,24 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class TitlesSerializer(serializers.ModelSerializer):
+    genre = serializers.StringRelatedField(many=True, read_only=True)
+    category = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
-        fields = '__all__'
+        fields = ('id',
+                  'name',
+                  'year',
+                  'rating',
+                  'description',
+                  'genre',
+                  'category'
+                  )
         model = Title
+
+    def validate_year(self, value):
+        year = dt.date.today().year
+        if value > year:
+            raise serializers.ValidationError(
+                'Проверьте год выхода произведения!'
+            )
+        return value

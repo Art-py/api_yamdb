@@ -4,7 +4,7 @@ from rest_framework import permissions
 from rest_framework.pagination import LimitOffsetPagination
 
 from reviews.models import Comment, Review, Title
-from .serializers import CommentSerializer, ReviewSerializer
+from .serializers import CommentSerializer, ReviewSerializer, TitlesSerializer
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
 
 
@@ -27,4 +27,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    pass
+    queryset = Title.objects.all()
+    serializer_class = TitlesSerializer
+    permission_classes = (IsAdmin, )
