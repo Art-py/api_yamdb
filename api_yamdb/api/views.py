@@ -28,8 +28,7 @@ def signup(request):
     if result.exists():
         user = result[0]
     serializer = SimpleUserSerializer(user, data=request.data)
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
+    serializer.is_valid(raise_exception=True)
     confirmation_code = generate_confirmation_code()
     user = serializer.save(confirmation_code=confirmation_code)
     user.email_user(
