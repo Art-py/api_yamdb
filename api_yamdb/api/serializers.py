@@ -18,7 +18,12 @@ class SimpleUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'email': {
                 'required': True,
-                'validators': [UniqueValidator(queryset=User.objects.all())],
+                'validators': [
+                    UniqueValidator(
+                        queryset=User.objects.all(),
+                        message='A user with that email already exists.'
+                    )
+                ],
             },
         }
 
