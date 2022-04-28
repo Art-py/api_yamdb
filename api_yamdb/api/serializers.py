@@ -2,7 +2,7 @@ import datetime as dt
 
 from rest_framework import serializers
 
-from reviews.models import Category, Genre,  Comment, Title
+from reviews.models import Category, Genre, Comment, Title, Review
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -26,12 +26,19 @@ class CommentSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ('id', 'text', 'author', 'score', 'pub_date')
+        fields = ('id', 'text', 'author', 'pub_date')
         model = Comment
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    pass
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
+
+    class Meta:
+        fields = ('id', 'text', 'author', 'score', 'pub_date')
+        model = Review
 
 
 class TitlesSerializer(serializers.ModelSerializer):
