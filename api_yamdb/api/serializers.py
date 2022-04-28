@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from reviews.models import Category, Genre,  Comment
 
@@ -14,7 +15,12 @@ class SimpleUserSerializer(serializers.ModelSerializer):
             'username',
             'email',
         ]
-        extra_kwargs = {'email': {'required': True}}
+        extra_kwargs = {
+            'email': {
+                'required': True,
+                'validators': [UniqueValidator(queryset=User.objects.all())],
+            },
+        }
 
 
 class BasicUserSerializer(SimpleUserSerializer):
