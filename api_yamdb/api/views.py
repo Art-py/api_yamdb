@@ -28,6 +28,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsReadOnly, IsAdmin, )
     queryset = Title.objects.all()
     serializer_class = TitlesSerializer
     filter_backends = (DjangoFilterBackend,)
