@@ -2,6 +2,7 @@ from django.urls import include, path
 from rest_framework import routers
 
 from .views import (
+    signup,
     CommentViewSet,
     ReviewViewSet,
     TitleViewSet,
@@ -39,5 +40,6 @@ router_v1.register(
 )
 
 urlpatterns = [
+    path('v1/auth/signup/', signup, name='signup'),
     path('v1/', include(router_v1.urls)),
 ]

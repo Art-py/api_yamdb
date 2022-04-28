@@ -1,12 +1,42 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets, mixins
 from rest_framework import permissions
+from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
 
-from .serializers import CommentSerializer, ReviewSerializer, CategorySerializer, GenreSerializer
+from .serializers import CommentSerializer, ReviewSerializer, CategorySerializer, GenreSerializer, SimpleUserSerializer
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
 from reviews.models import Category, Genre, Comment, Review, Title
+from .utils import generate_confirmation_code
+
+User = get_user_model()
+
+
+@api_view(['POST'])
+def signup(request):
+    # Возможно, пользователь был зарегистрирован администратором,
+    # или хочет получить новый код
+    # Поэтому пробуем найти его в базе.
+    result = User.objects.filter(
+        username=request.data.get('username'),
+        email=request.data.get('email')
+    )
+    user = None
+    if result.exists():
+        user = result[0]
+    serializer = SimpleUserSerializer(user, data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=400)
+    confirmation_code = generate_confirmation_code()
+    user = serializer.save(confirmation_code=confirmation_code)
+    user.email_user(
+        subject='Код подтверждения',
+        message=confirmation_code
+    )
+    return Response(serializer.data, status=200)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
