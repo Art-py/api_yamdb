@@ -9,6 +9,7 @@
 - pytest==6.2.4
 - pytest-django==4.4.0
 - pytest-pythonpath==0.7.3
+- django-filter==21.1
 
 ## Как запустить проект:
 Cоздать и активировать виртуальное окружение:
