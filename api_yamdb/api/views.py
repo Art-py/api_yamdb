@@ -6,8 +6,9 @@ from rest_framework import permissions
 from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import AccessToken
 
-from .serializers import CommentSerializer, ReviewSerializer, CategorySerializer, GenreSerializer, SimpleUserSerializer
+from .serializers import CommentSerializer, ReviewSerializer, CategorySerializer, GenreSerializer, SimpleUserSerializer, TokenRequestSerializer
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
 from reviews.models import Category, Genre, Comment, Review, Title
 from .utils import generate_confirmation_code
@@ -36,6 +37,19 @@ def signup(request):
         message=confirmation_code
     )
     return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+def token(request):
+    serializer = TokenRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user = get_object_or_404(
+        User,
+        username=serializer.validated_data['username'],
+        confirmation_code=serializer.validated_data['confirmation_code']
+    )
+    token = AccessToken.for_user(user)
+    return Response({'token': str(token)})
 
 
 class CommentViewSet(viewsets.ModelViewSet):

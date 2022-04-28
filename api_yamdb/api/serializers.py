@@ -47,6 +47,11 @@ class FullUserSerializer(SimpleUserSerializer):
         read_only_fields.remove('role')
 
 
+class TokenRequestSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    confirmation_code = serializers.CharField()
+
+
 class CategorySerializer(serializers.ModelSerializer):
     """Сериализатор для категорий"""
     class Meta:
