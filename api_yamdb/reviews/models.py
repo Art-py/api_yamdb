@@ -28,6 +28,7 @@ class User(AbstractUser):
         max_length=settings.CONFIRMATION_CODE_LENGTH,
         null=True
     )
+
     class Meta(AbstractUser.Meta):
         constraints = [
             models.CheckConstraint(
@@ -102,15 +103,13 @@ class Review(CreateDate):
         related_name='reviews'
     )
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['author', 'title'],
-                name='unique_review'
-            )
-        ]
-
-
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(
+    #             fields=['author', 'title'],
+    #             name='unique_review'
+    #         )
+    #     ]
 
 
 class Comment(CreateDate):

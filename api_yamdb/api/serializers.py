@@ -96,23 +96,16 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         # validators = [
         #     UniqueTogetherValidator(
-        #         queryset=Review.objects.all(),
-        #         fields=['author', 'score']
+        #         queryset=Review.objects.all(), fields=['author', 'title']
         #     )
         # ]
 
-    def validate(self, data):
-        title_id = self.context['view'].kwargs.get('title_id')
-        title = get_object_or_404(Title, pk=title_id)
-        if self.context.get('request').user == 
-        self.context.get('request').parser_context.get('kwargs').get('title_id')
-
-:
-            raise serializers.ValidationError(
-                'Нельзя подписаться на самого себя!'
-            )
-        return data
-
+    # def validate(self, data):
+    #     if Review.objects.filter(author=data['author'], title=data['title']).exists():
+    #         raise serializers.ValidationError(
+    #             'Нельзя писать второй отзыв!'
+    #         )
+    #     return data
 
 
 class TitlesSerializer(serializers.ModelSerializer):
