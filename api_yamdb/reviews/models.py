@@ -75,6 +75,7 @@ class Genre(models.Model):
 
 
 class Title(models.Model):
+    """Произведения."""
     name = models.TextField()
     year = models.IntegerField()
     description = models.TextField(blank=True)
@@ -103,13 +104,13 @@ class Review(CreateDate):
         related_name='reviews'
     )
 
-    # class Meta:
-    #     constraints = [
-    #         models.UniqueConstraint(
-    #             fields=['author', 'title'],
-    #             name='unique_review'
-    #         )
-    #     ]
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['author', 'title'],
+                name='unique_review'
+            )
+        ]
 
 
 class Comment(CreateDate):

@@ -1,9 +1,8 @@
 import datetime as dt
 
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
+from rest_framework.validators import UniqueValidator
 
 from reviews.models import Category, Genre, Comment, Title, Review
 
@@ -94,18 +93,17 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('id', 'text', 'author', 'score', 'pub_date')
         model = Review
-        # validators = [
-        #     UniqueTogetherValidator(
-        #         queryset=Review.objects.all(), fields=['author', 'title']
-        #     )
-        # ]
 
-    # def validate(self, data):
-    #     if Review.objects.filter(author=data['author'], title=data['title']).exists():
-    #         raise serializers.ValidationError(
-    #             'Нельзя писать второй отзыв!'
-    #         )
-    #     return data
+    def validate(self, data):
+        if Review.objects.filter(
+            author=self.context.get('request').user.id,
+            title=self._context['request'].parser_context['kwargs']['title_id']
+        ).exists():
+            if self.context.get('request').method != 'PATCH':
+                raise serializers.ValidationError(
+                    'Нельзя писать второй отзыв!'
+                )
+        return data
 
 
 class TitlesSerializer(serializers.ModelSerializer):
