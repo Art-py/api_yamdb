@@ -98,16 +98,11 @@ class ReviewSerializer(serializers.ModelSerializer):
 class TitlesSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
+    rating = serializers.IntegerField(source='reviews__score__avg',
+                                      read_only=True)
 
     class Meta:
-        fields = ('id',
-                  'name',
-                  'year',
-                  'rating',
-                  'description',
-                  'genre',
-                  'category'
-                  )
+        fields = ('__all__')
         model = Title
 
     def validate_year(self, value):
