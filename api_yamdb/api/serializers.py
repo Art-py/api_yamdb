@@ -95,14 +95,7 @@ class TitlesSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
 
     class Meta:
-        fields = ('id',
-                  'name',
-                  'year',
-                  'rating',
-                  'description',
-                  'genre',
-                  'category'
-                  )
+        fields = ('__all__')
         model = Title
 
     def validate_year(self, value):
