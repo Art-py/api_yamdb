@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
 
@@ -23,6 +24,10 @@ class User(AbstractUser):
         blank=True
     )
     role = models.CharField(max_length=9, choices=ROLE_CHOICES, default=USER)
+    confirmation_code = models.CharField(
+        max_length=settings.CONFIRMATION_CODE_LENGTH,
+        null=True
+    )
 
 
 class Category(models.Model):
