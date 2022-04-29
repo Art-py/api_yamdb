@@ -39,38 +39,53 @@ class Command(BaseCommand):
 
     def add_users(self):
         reader = self.get_csv_reader('users')
+        users = []
         for row in reader:
-            User.objects.create_user(**row)
+            users.append(User(**row))
+        User.objects.bulk_create(users)
 
     def add_categories(self): 
         reader = self.get_csv_reader('category')
+        categories = []
         for row in reader:
-            Category.objects.create(**row)
+            categories.append(Category(**row))
+        Category.objects.bulk_create(categories)
 
     def add_genres(self):
         reader = self.get_csv_reader('genre')
+        genres = []
         for row in reader:
-            Genre.objects.create(**row)
+            genres.append(Genre(**row))
+        Genre.objects.bulk_create(genres)
 
     def add_titles(self):
         reader = self.get_csv_reader('titles')
+        titles = []
         for row in reader:
             row['category_id'] = row.pop('category')
-            Title.objects.create(**row)
+            titles.append(Title(**row))
+        Title.objects.bulk_create(titles)
 
     def add_title_genre_relations(self):
         reader = self.get_csv_reader('genre_title')
+        relations = []
+        model = Title.genre.through
         for row in reader:
-            Title.genre.through.objects.create(**row)
+            relations.append(model(**row))
+        model.objects.bulk_create(relations)
 
     def add_reviews(self):
         reader = self.get_csv_reader('review')
+        reviews = []
         for row in reader:
             row['author_id'] = row.pop('author')
-            Review.objects.create(**row)
+            reviews.append(Review(**row))
+        Review.objects.bulk_create(reviews)
 
     def add_comments(self):
         reader = self.get_csv_reader('comments')
+        comments = []
         for row in reader:
             row['author_id'] = row.pop('author')
-            Comment.objects.create(**row)
+            comments.append(Comment(**row))
+        Comment.objects.bulk_create(comments)
