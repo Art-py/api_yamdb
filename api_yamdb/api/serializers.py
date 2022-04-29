@@ -30,6 +30,11 @@ class SimpleUserSerializer(serializers.ModelSerializer):
             },
         }
 
+    def validate_username(self, value):
+        if value.lower() == 'me':
+            raise serializers.ValidationError('Username me is reserved.')
+        return value
+
 
 class BasicUserSerializer(SimpleUserSerializer):
     """Сериализатор для пользователей с ролью не равной ADMIN."""
@@ -113,16 +118,11 @@ class ReviewSerializer(serializers.ModelSerializer):
 class TitlesSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
+    rating = serializers.IntegerField(source='reviews__score__avg',
+                                      read_only=True)
 
     class Meta:
-        fields = ('id',
-                  'name',
-                  'year',
-                  'rating',
-                  'description',
-                  'genre',
-                  'category'
-                  )
+        fields = ('__all__')
         model = Title
 
     def validate_year(self, value):
