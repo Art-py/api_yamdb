@@ -8,6 +8,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
+from .mixins import GenresCategoriesViewSet
 from .serializers import (
     CategorySerializer,
     CommentSerializer,
@@ -102,31 +103,11 @@ class TitleViewSet(viewsets.ModelViewSet):
     filterset_fields = ('name', 'year', 'genre__slug', 'category__slug')
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsReadOnly | IsAdmin, )
+class CategoryViewSet(GenresCategoriesViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    search_fields = ('=name',)
-    lookup_field = 'slug'
-
-    def retrieve(self, request, *args, **kwargs):
-        return Response(status=405)
-
-    def update(self, request, *args, **kwargs):
-        return Response(status=405)
 
 
-class GenreViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsReadOnly | IsAdmin, )
+class GenreViewSet(GenresCategoriesViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    search_fields = ('=name',)
-    lookup_field = 'slug'
-
-    def retrieve(self, request, *args, **kwargs):
-        return Response(status=405)
-
-    def update(self, request, *args, **kwargs):
-        return Response(status=405)
