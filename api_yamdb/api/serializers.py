@@ -107,3 +107,9 @@ class TitlesSerializer(serializers.ModelSerializer):
                 'Проверьте год выхода произведения!'
             )
         return value
+
+    # def create(self, validated_data):
+    #     genre_data = validated_data.pop('category')
+    #     category = Category.objects.create(**validated_data)
+    #     Genre.objects.create(category=category, **genre_data)
+    #     return category
