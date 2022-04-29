@@ -3,12 +3,14 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets, mixins
 from rest_framework import permissions
-from rest_framework.decorators import api_view
+from rest_framework.decorators import action, api_view
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
+from .mixins import GenresCategoriesViewSet
 from .serializers import (
+    BasicUserSerializer,
     CategorySerializer,
     CommentSerializer,
     FullUserSerializer,
@@ -65,7 +67,28 @@ class UserViewSet(viewsets.ModelViewSet):
     model = User
     serializer_class = FullUserSerializer
     queryset = User.objects.all()
+    lookup_field = 'username'
     permission_classes = [IsAdmin]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['username']
+
+    @action(
+        methods=['GET', 'PATCH'],
+        detail=False,
+        url_path='me',
+        permission_classes=[permissions.IsAuthenticated]
+    )
+    def me(self, request):
+        if request.method == 'GET':
+            return Response(BasicUserSerializer(request.user).data)
+        serializer = BasicUserSerializer(
+            request.user,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -102,19 +125,11 @@ class TitleViewSet(viewsets.ModelViewSet):
     filterset_fields = ('name', 'year', 'genre__slug', 'category__slug')
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsReadOnly | IsAdmin, )
+class CategoryViewSet(GenresCategoriesViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    search_fields = ('=name',)
-    lookup_field = 'slug'
 
 
-class GenreViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsReadOnly | IsAdmin, )
+class GenreViewSet(GenresCategoriesViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    search_fields = ('=name',)
-    lookup_field = 'slug'

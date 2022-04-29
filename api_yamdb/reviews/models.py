@@ -28,6 +28,13 @@ class User(AbstractUser):
         max_length=settings.CONFIRMATION_CODE_LENGTH,
         null=True
     )
+    class Meta(AbstractUser.Meta):
+        constraints = [
+            models.CheckConstraint(
+                check=~models.Q(username__iexact='me'),
+                name='username_me_is_reserved'
+            ),
+        ]
 
 
 class Category(models.Model):
