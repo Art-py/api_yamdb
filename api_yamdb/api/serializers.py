@@ -2,7 +2,7 @@ import datetime as dt
 
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
+from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
 from reviews.models import Category, Genre, Comment, Title, Review
 
@@ -88,6 +88,16 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('id', 'text', 'author', 'score', 'pub_date')
         model = Review
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Review.objects.all(),
+                fields=['author', 'score']
+            )
+        ]
+
+    # def validate(self, date):
+    #     ...
+
 
 
 class TitlesSerializer(serializers.ModelSerializer):

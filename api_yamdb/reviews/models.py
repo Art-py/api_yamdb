@@ -95,6 +95,16 @@ class Review(CreateDate):
         related_name='reviews'
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['author', 'title'],
+                name='unique_review'
+            )
+        ]
+
+
+
 
 class Comment(CreateDate):
     """Комментарии к отзывам."""
