@@ -28,6 +28,7 @@ class User(AbstractUser):
         max_length=settings.CONFIRMATION_CODE_LENGTH,
         null=True
     )
+
     class Meta(AbstractUser.Meta):
         constraints = [
             models.CheckConstraint(
@@ -74,6 +75,7 @@ class Genre(models.Model):
 
 
 class Title(models.Model):
+    """Произведения."""
     name = models.TextField()
     year = models.IntegerField()
     description = models.TextField(blank=True)
@@ -101,6 +103,14 @@ class Review(CreateDate):
         on_delete=models.CASCADE,
         related_name='reviews'
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['author', 'title'],
+                name='unique_review'
+            )
+        ]
 
 
 class Comment(CreateDate):
