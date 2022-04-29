@@ -110,6 +110,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
     search_fields = ('=name',)
     lookup_field = 'slug'
 
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=405)
+
+    def update(self, request, *args, **kwargs):
+        return Response(status=405)
+
 
 class GenreViewSet(viewsets.ModelViewSet):
     permission_classes = (IsReadOnly | IsAdmin, )
@@ -118,3 +124,9 @@ class GenreViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     search_fields = ('=name',)
     lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=405)
+
+    def update(self, request, *args, **kwargs):
+        return Response(status=405)
