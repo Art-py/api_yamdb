@@ -2,14 +2,9 @@
 Проект YaMDb
 
 ## Использованные технологии:
-- requests==2.26.0
-- django==2.2.16
-- djangorestframework==3.12.4
-- PyJWT==2.1.0
-- pytest==6.2.4
-- pytest-django==4.4.0
-- pytest-pythonpath==0.7.3
-- django-filter==21.1
+- django2
+- djangorestframework
+- python3
 
 ## Как запустить проект:
 Cоздать и активировать виртуальное окружение:
