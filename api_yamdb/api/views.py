@@ -59,7 +59,8 @@ def token(request):
         User,
         username=serializer.validated_data['username']
     )
-    if user.confirmation_code != serializer.validated_data['confirmation_code']:
+    if (user.confirmation_code !=
+            serializer.validated_data['confirmation_code']):
         return Response('Неверный код подтверждения', status=400)
     token = AccessToken.for_user(user)
     return Response({'token': str(token)})
