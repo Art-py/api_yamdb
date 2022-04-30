@@ -109,8 +109,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class TitlesSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
-    rating = serializers.IntegerField(source='reviews__score__avg',
-                                      read_only=True)
+    rating = serializers.FloatField(source='reviews__score__avg', read_only=True)
 
     class Meta:
         fields = ('__all__')
@@ -123,9 +122,3 @@ class TitlesSerializer(serializers.ModelSerializer):
                 'Проверьте год выхода произведения!'
             )
         return value
-
-    # def create(self, validated_data):
-    #     genre_data = validated_data.pop('category')
-    #     category = Category.objects.create(**validated_data)
-    #     Genre.objects.create(category=category, **genre_data)
-    #     return category
