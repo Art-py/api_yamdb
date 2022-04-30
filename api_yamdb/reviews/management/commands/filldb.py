@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
     def get_csv_reader(self, name):
         """Загружает таблицу по имени (расширение передавать не требуется)"""
-        path = os.path.join(DATA_DIR, name)+'.csv'
+        path = os.path.join(DATA_DIR, name) + '.csv'
         f = open(path, 'r', encoding='utf-8')
         return csv.DictReader(f)
 
@@ -38,7 +38,7 @@ class Command(BaseCommand):
             users.append(User(**row))
         User.objects.bulk_create(users)
 
-    def add_categories(self): 
+    def add_categories(self):
         reader = self.get_csv_reader('category')
         categories = []
         for row in reader:
