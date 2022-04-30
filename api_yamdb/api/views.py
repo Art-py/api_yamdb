@@ -2,10 +2,9 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Avg
-from rest_framework import filters, viewsets, mixins
+from rest_framework import filters, viewsets
 from rest_framework import permissions
 from rest_framework.decorators import action, api_view
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -22,8 +21,9 @@ from .serializers import (
     TokenRequestSerializer,
 )
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
-from reviews.models import Category, Genre, Comment, Review, Title
+from reviews.models import Category, Genre, Review, Title
 from .utils import generate_confirmation_code
+from .filters import TitleFilter
 
 User = get_user_model()
 
@@ -125,7 +125,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().annotate(Avg("reviews__score"))
     serializer_class = TitlesSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('name', 'year', 'genre__slug', 'category__slug')
+    filterset_class = TitleFilter
 
 
 class CategoryViewSet(GenresCategoriesViewSet):
