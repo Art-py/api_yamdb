@@ -3,13 +3,6 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
 
-class CreateDate(models.Model):
-    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
-
-    class Meta:
-        abstract = True
-
-
 class User(AbstractUser):
     USER = 'user'
     MODERATOR = 'moderator'
@@ -89,14 +82,19 @@ class Title(models.Model):
     )
 
 
-class Review(CreateDate):
-    """Текстовые отзывы к произведениям."""
+class ReviewAndComment(models.Model):
     text = models.TextField()
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='reviews'
-    )
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+
+    class Meta:
+        abstract = True
+        default_related_name = '%(model_name)s'
+
+
+class Review(ReviewAndComment):
+    """Текстовые отзывы к произведениям."""
+
     score = models.IntegerField()
     title = models.ForeignKey(
         Title,
@@ -113,14 +111,9 @@ class Review(CreateDate):
         ]
 
 
-class Comment(CreateDate):
+class Comment(ReviewAndComment):
     """Комментарии к отзывам."""
-    text = models.TextField()
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='comments'
-    )
+
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
