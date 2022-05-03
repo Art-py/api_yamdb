@@ -90,6 +90,7 @@ class ReviewAndComment(models.Model):
     class Meta:
         abstract = True
         default_related_name = '%(model_name)s'
+        ordering = ['-pub_date']
 
 
 class Review(ReviewAndComment):
