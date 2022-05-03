@@ -43,6 +43,14 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+## Наполнение базы тестовыми данными.
+
+Тестовые данные подготовлены, для наполнения выполните команду:
+
+```
+python manage.py filldb
+```
+
 ## документация API.
 
 Документация API доступна по адресу http://127.0.0.1:8000/redoc/
@@ -86,7 +94,7 @@ python manage.py runserver
 
 ## Авторы проекта.
 
-- Жуков Артем
-- Пылаев Данил
-- Воронюк Ольга
-- Тростянский Дмитрий
+- Жуков Артем - [Art-py](https://github.com/Art-py)
+- Пылаев Данил - [Danstiv](https://github.com/danstiv)
+- Воронюк Ольга - [Helga61](https://github.com/Helga61)
+- Тростянский Дмитрий - [trdeman](https://github.com/trdeman)
