@@ -1,5 +1,3 @@
-import datetime as dt
-
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -134,11 +132,3 @@ class TitlesSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('__all__')
         model = Title
-
-    def validate_year(self, value):
-        year = dt.date.today().year
-        if value > year:
-            raise serializers.ValidationError(
-                'Проверьте год выхода произведения!'
-            )
-        return value
