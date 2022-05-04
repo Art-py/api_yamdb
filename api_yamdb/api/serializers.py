@@ -104,30 +104,18 @@ class ReviewSerializer(serializers.ModelSerializer):
         return data
 
 
-class SlugSerializerRelatedField(serializers.SlugRelatedField):
-
-    def __init__(self, *args, serializer_class, **kwargs):
-        self.serializer_class = serializer_class
-        super().__init__(*args, **kwargs)
-
-    def to_representation(self, obj):
-        return self.serializer_class(obj).data
-
-
 class TitlesSerializer(serializers.ModelSerializer):
-    genre = SlugSerializerRelatedField(
-        queryset=Genre.objects.all(),
-        slug_field='slug',
-        serializer_class=GenreSerializer,
-        many=True
+    genre = GenreSerializer(many=True, read_only=True)
+    category = serializers.SlugRelatedField(
+        many=True,
+        slug_field='id',
+        queryset=Category.objects.all()
     )
-    category = SlugSerializerRelatedField(
-        queryset=Category.objects.all(),
-        slug_field='slug',
-        serializer_class=CategorySerializer
+
+    rating = serializers.FloatField(
+        source='reviews__score__avg',
+        read_only=True
     )
-    rating = serializers.IntegerField(source='reviews__score__avg',
-                                      read_only=True)
 
     class Meta:
         fields = ('__all__')
