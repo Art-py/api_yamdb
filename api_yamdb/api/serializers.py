@@ -104,13 +104,9 @@ class ReviewSerializer(serializers.ModelSerializer):
         return data
 
 
-class TitlesSerializer(serializers.ModelSerializer):
+class ReadTitlesSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True, read_only=True)
-    category = serializers.SlugRelatedField(
-        many=True,
-        slug_field='id',
-        queryset=Category.objects.all()
-    )
+    category = CategorySerializer(read_only=True)
 
     rating = serializers.FloatField(
         source='reviews__score__avg',
@@ -118,5 +114,21 @@ class TitlesSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ('__all__')
         model = Title
+        fields = ('__all__')
+
+
+class UpdateTitlesSerializer(serializers.ModelSerializer):
+    genre = serializers.SlugRelatedField(
+        many=True,
+        slug_field='slug',
+        queryset=Genre.objects.all()
+    )
+    category = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=Category.objects.all()
+    )
+
+    class Meta:
+        model = Title
+        fields = ('__all__')

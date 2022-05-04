@@ -17,7 +17,8 @@ from .serializers import (
     GenreSerializer,
     ReviewSerializer,
     SimpleUserSerializer,
-    TitlesSerializer,
+    ReadTitlesSerializer,
+    UpdateTitlesSerializer,
     TokenRequestSerializer,
 )
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
@@ -123,9 +124,13 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsReadOnly | IsAdmin, )
     queryset = Title.objects.all().annotate(Avg("reviews__score"))
-    serializer_class = TitlesSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ReadTitlesSerializer
+        return UpdateTitlesSerializer
 
 
 class CategoryViewSet(GenresCategoriesViewSet):
