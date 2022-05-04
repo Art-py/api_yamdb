@@ -19,4 +19,3 @@ class UsernameValidator(RegexValidator):
             if self.exception:
                 raise self.exception(e.message, code=e.code)
             raise
-        return value
