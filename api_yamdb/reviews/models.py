@@ -75,13 +75,12 @@ def no_future_year(value):
         raise ValidationError(
             'Год выхода произведения не может быть больше текущего!'
         )
-    return value
 
 
 class Title(models.Model):
     """Произведения."""
     name = models.TextField()
-    year = models.IntegerField(validators=no_future_year)
+    year = models.IntegerField(validators=[no_future_year])
     description = models.TextField(blank=True)
     genre = models.ManyToManyField(Genre)
     category = models.ForeignKey(
