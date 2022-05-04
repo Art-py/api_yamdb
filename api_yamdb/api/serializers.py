@@ -1,5 +1,3 @@
-import datetime as dt
-
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -106,39 +104,28 @@ class ReviewSerializer(serializers.ModelSerializer):
         return data
 
 
-class SlugSerializerRelatedField(serializers.SlugRelatedField):
+class ReadTitlesSerializer(serializers.ModelSerializer):
+    genre = GenreSerializer(many=True, read_only=True)
+    category = CategorySerializer(read_only=True)
 
-    def __init__(self, *args, serializer_class, **kwargs):
-        self.serializer_class = serializer_class
-        super().__init__(*args, **kwargs)
-
-    def to_representation(self, obj):
-        return self.serializer_class(obj).data
-
-
-class TitlesSerializer(serializers.ModelSerializer):
-    genre = SlugSerializerRelatedField(
-        queryset=Genre.objects.all(),
-        slug_field='slug',
-        serializer_class=GenreSerializer,
-        many=True
-    )
-    category = SlugSerializerRelatedField(
-        queryset=Category.objects.all(),
-        slug_field='slug',
-        serializer_class=CategorySerializer
-    )
-    rating = serializers.IntegerField(source='reviews__score__avg',
-                                      read_only=True)
+    rating = serializers.IntegerField(read_only=True)
 
     class Meta:
-        fields = ('__all__')
         model = Title
+        fields = ('__all__')
 
-    def validate_year(self, value):
-        year = dt.date.today().year
-        if value > year:
-            raise serializers.ValidationError(
-                'Проверьте год выхода произведения!'
-            )
-        return value
+
+class UpdateTitlesSerializer(serializers.ModelSerializer):
+    genre = serializers.SlugRelatedField(
+        many=True,
+        slug_field='slug',
+        queryset=Genre.objects.all()
+    )
+    category = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=Category.objects.all()
+    )
+
+    class Meta:
+        model = Title
+        fields = ('__all__')

@@ -1,6 +1,9 @@
+import datetime as dt
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 
 class User(AbstractUser):
@@ -65,15 +68,28 @@ class Genre(CategoryAndGenreBase):
         verbose_name_plural = 'Жанр произведений'
 
 
+def no_future_year(value):
+    if value > dt.date.today().year:
+        raise ValidationError(
+            'Год выхода произведения не может быть больше текущего!'
+        )
+
+
 class Title(models.Model):
-    """Произведения."""
-    name = models.TextField()
-    year = models.IntegerField()
-    description = models.TextField(blank=True)
-    rating = models.FloatField(null=True)
-    genre = models.ManyToManyField(Genre)
+    """Произведения"""
+    name = models.TextField(help_text='Наименование произведения')
+    year = models.IntegerField(
+        help_text='Год выхода произведения',
+        validators=[no_future_year]
+    )
+    description = models.TextField(
+        help_text='Описание произведения',
+        blank=True
+    )
+    genre = models.ManyToManyField(Genre, help_text='Жанр произведения')
     category = models.ForeignKey(
         Category,
+        help_text='Категория произведения',
         on_delete=models.SET_NULL,
         related_name='titles',
         null=True

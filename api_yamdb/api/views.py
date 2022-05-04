@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 from rest_framework import filters, viewsets
 from rest_framework import permissions
 from rest_framework.decorators import action, api_view
@@ -17,7 +17,8 @@ from .serializers import (
     GenreSerializer,
     ReviewSerializer,
     SimpleUserSerializer,
-    TitlesSerializer,
+    ReadTitlesSerializer,
+    UpdateTitlesSerializer,
     TokenRequestSerializer,
 )
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
@@ -122,10 +123,16 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsReadOnly | IsAdmin, )
-    queryset = Title.objects.all().annotate(Avg("reviews__score"))
-    serializer_class = TitlesSerializer
+    queryset = Title.objects.all().annotate(
+        rating=Avg("reviews__score")
+    ).order_by("name")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ReadTitlesSerializer
+        return UpdateTitlesSerializer
 
 
 class CategoryViewSet(GenresCategoriesViewSet):
