@@ -1,8 +1,10 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.db import models
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Avg, Sum
-from rest_framework import filters, viewsets
+from rest_framework import filters, serializers, viewsets
 from rest_framework import permissions
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
@@ -16,9 +18,9 @@ from .serializers import (
     FullUserSerializer,
     GenreSerializer,
     ReviewSerializer,
-    SimpleUserSerializer,
     ReadTitlesSerializer,
     UpdateTitlesSerializer,
+    SignupUserSerializer,
     TokenRequestSerializer,
 )
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
@@ -31,20 +33,20 @@ User = get_user_model()
 
 @api_view(['POST'])
 def signup(request):
-    # Возможно, пользователь был зарегистрирован администратором,
-    # или хочет получить новый код
-    # Поэтому пробуем найти его в базе.
-    result = User.objects.filter(
-        username=request.data.get('username'),
-        email=request.data.get('email')
-    )
-    user = None
-    if result.exists():
-        user = result[0]
-    serializer = SimpleUserSerializer(user, data=request.data)
+    serializer = SignupUserSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    confirmation_code = generate_confirmation_code()
-    user = serializer.save(confirmation_code=confirmation_code)
+    username = serializer.validated_data['username']
+    email = serializer.validated_data['email']
+    query = models.Q(username=username) & ~models.Q(email=email)
+    if User.objects.filter(query).exists():
+        return Response(f'Имя "{username}" занято.', status=400)
+    query = ~models.Q(username=username) & models.Q(email=email)
+    if User.objects.filter(query).exists():
+        return Response(f'На адрес "{email}" зарегистрирован другой пользователь.', status=400)
+    confirmation_code = generate_confirmation_code(settings.CONFIRMATION_CODE_LENGTH)
+    user = User.objects.get_or_create(**serializer.validated_data)[0]
+    user.confirmation_code = confirmation_code
+    user.save()
     user.email_user(
         subject='Код подтверждения',
         message=confirmation_code
