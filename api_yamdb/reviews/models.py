@@ -3,8 +3,9 @@ import datetime as dt
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
 from django.db import models
+
+from .validators import UsernameValidator
 
 
 class User(AbstractUser):
@@ -22,18 +23,7 @@ class User(AbstractUser):
         max_length=150,
         unique=True,
         validators=[
-            RegexValidator(
-                r'^[\w.@+-]{1,150}$',
-                message=(
-                    'Не более 150 символов, '
-                    'допустимы только буквы, цифры и @/./+/-/_'
-                )
-            ),
-            RegexValidator(
-                r'^me$',
-                inverse_match=True,
-                message='Имя пользователя me не может быть использовано'
-            )
+            UsernameValidator()
         ]
     )
     email = models.EmailField('Электронная почта', unique=True, max_length=254)
