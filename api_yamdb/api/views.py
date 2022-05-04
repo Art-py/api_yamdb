@@ -19,6 +19,7 @@ from .serializers import (
     SimpleUserSerializer,
     TitlesSerializer,
     TokenRequestSerializer,
+    ReviewCreateSerializer,
 )
 from .permissions import IsAuthor, IsReadOnly, IsAdmin, IsModerator
 from reviews.models import Category, Genre, Review, Title
@@ -122,6 +123,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
     def get_title(self):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
         return title
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return ReviewCreateSerializer
+        return ReviewSerializer
 
 
 class TitleViewSet(viewsets.ModelViewSet):
