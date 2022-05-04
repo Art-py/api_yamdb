@@ -16,6 +16,7 @@ class User(AbstractUser):
         (MODERATOR, 'Moderator'),
         (ADMIN, 'Admin'),
     ]
+    ROLE_MAX_LENGTH = max(len(role[0]) for role in ROLE_CHOICES)
     username = models.CharField(
         'Имя пользователя',
         max_length=150,
@@ -42,7 +43,7 @@ class User(AbstractUser):
         'Биография',
         blank=True
     )
-    role = models.CharField(max_length=9, choices=ROLE_CHOICES, default=USER)
+    role = models.CharField(max_length=ROLE_MAX_LENGTH, choices=ROLE_CHOICES, default=USER)
     confirmation_code = models.CharField(
         max_length=settings.CONFIRMATION_CODE_LENGTH,
         null=True
