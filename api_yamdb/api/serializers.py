@@ -15,17 +15,6 @@ class SimpleUserSerializer(serializers.ModelSerializer):
             'username',
             'email',
         ]
-        extra_kwargs = {
-            'email': {
-                'required': True,
-                'validators': [
-                    UniqueValidator(
-                        queryset=User.objects.all(),
-                        message='A user with that email already exists.'
-                    )
-                ],
-            },
-        }
 
     def validate_username(self, value):
         if value.lower() == 'me':
