@@ -23,6 +23,7 @@ class TokenRequestSerializer(serializers.Serializer):
 class FullUserSerializer(serializers.ModelSerializer):
     """Сериализатор для выполнения операций пользователями с ролью ADMIN."""
     class Meta():
+        model = User
         fields = [
             'username',
             'email',
