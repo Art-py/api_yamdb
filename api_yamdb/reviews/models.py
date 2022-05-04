@@ -82,7 +82,7 @@ class Title(models.Model):
     )
 
 
-class ReviewAndComment(models.Model):
+class ReviewAndCommentBase(models.Model):
     text = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
@@ -93,7 +93,7 @@ class ReviewAndComment(models.Model):
         ordering = ['-pub_date']
 
 
-class Review(ReviewAndComment):
+class Review(ReviewAndCommentBase):
     """Текстовые отзывы к произведениям."""
 
     score = models.IntegerField()
@@ -112,7 +112,7 @@ class Review(ReviewAndComment):
         ]
 
 
-class Comment(ReviewAndComment):
+class Comment(ReviewAndCommentBase):
     """Комментарии к отзывам."""
 
     review = models.ForeignKey(
