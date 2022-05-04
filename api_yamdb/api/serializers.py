@@ -16,11 +16,6 @@ class SimpleUserSerializer(serializers.ModelSerializer):
             'email',
         ]
 
-    def validate_username(self, value):
-        if value.lower() == 'me':
-            raise serializers.ValidationError('Username me is reserved.')
-        return value
-
 
 class BasicUserSerializer(SimpleUserSerializer):
     """Сериализатор для пользователей с ролью не равной ADMIN."""

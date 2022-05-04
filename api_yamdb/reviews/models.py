@@ -1,9 +1,10 @@
 import datetime as dt
 
-from django.contrib.auth.models import AbstractUser
-from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
+from django.db import models
 
 
 class User(AbstractUser):
@@ -15,7 +16,28 @@ class User(AbstractUser):
         (MODERATOR, 'Moderator'),
         (ADMIN, 'Admin'),
     ]
-    email = models.EmailField('Электронная почта', unique=True)
+    username = models.CharField(
+        'Имя пользователя',
+        max_length=150,
+        unique=True,
+        validators=[
+            RegexValidator(
+                r'^[\w.@+-]{1,150}$',
+                message=(
+                    'Не более 150 символов, '
+                    'допустимы только буквы, цифры и @/./+/-/_'
+                )
+            ),
+            RegexValidator(
+                r'^me$',
+                inverse_match=True,
+                message='Имя пользователя me не может быть использовано'
+            )
+        ]
+    )
+    email = models.EmailField('Электронная почта', unique=True, max_length=254)
+    first_name = models.CharField('Имя', max_length=150, blank=True)
+    last_name = models.CharField('Фамилия', max_length=150, blank=True)
     bio = models.TextField(
         'Биография',
         blank=True
@@ -25,14 +47,6 @@ class User(AbstractUser):
         max_length=settings.CONFIRMATION_CODE_LENGTH,
         null=True
     )
-
-    class Meta(AbstractUser.Meta):
-        constraints = [
-            models.CheckConstraint(
-                check=~models.Q(username__iexact='me'),
-                name='username_me_is_reserved'
-            ),
-        ]
 
 
 class CategoryAndGenreBase(models.Model):
