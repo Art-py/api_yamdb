@@ -1,6 +1,9 @@
+import datetime as dt
+
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 
 
 class CreateDate(models.Model):
@@ -74,12 +77,19 @@ class Genre(models.Model):
         return self.slug
 
 
+def no_future_year(value):
+    if value > dt.date.today().year:
+        raise ValidationError(
+            'Год выхода произведения не может быть больше текущего!'
+        )
+    return value
+
+
 class Title(models.Model):
     """Произведения."""
     name = models.TextField()
-    year = models.IntegerField()
+    year = models.IntegerField(validators=no_future_year)
     description = models.TextField(blank=True)
-    rating = models.FloatField(null=True)
     genre = models.ManyToManyField(Genre)
     category = models.ForeignKey(
         Category,
