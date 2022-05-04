@@ -34,40 +34,38 @@ class User(AbstractUser):
         ]
 
 
-class Category(models.Model):
+class CategoryAndGenreBase(models.Model):
+    name = models.CharField(
+        max_length=256,
+        unique=True,
+        verbose_name='Название'
+    )
+    slug = models.SlugField(
+        max_length=50,
+        unique=True,
+        verbose_name='Уникальный идентифиактор',
+        help_text='Используйте буквы латиницы, цифры и символы "-" и "_"'
+    )
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.name
+
+
+class Category(CategoryAndGenreBase):
     """Категории: фильмы, книги, музыка и т.д."""
-    name = models.CharField(
-        max_length=256,
-        unique=True,
-        verbose_name='Категория',
-        help_text='Укажите категорию'
-    )
-    slug = models.SlugField(
-        max_length=50,
-        unique=True,
-        verbose_name='Слаг'
-    )
-
-    def __str__(self):
-        return self.slug
+    class Meta(CategoryAndGenreBase.Meta):
+        verbose_name = 'Категория произведения'
+        verbose_name_plural = 'Категории произведений'
 
 
-class Genre(models.Model):
+class Genre(CategoryAndGenreBase):
     """Жанры произведений"""
-    name = models.CharField(
-        max_length=256,
-        unique=True,
-        verbose_name='Жанр',
-        help_text='Укажите жанр'
-    )
-    slug = models.SlugField(
-        max_length=50,
-        unique=True,
-        verbose_name='Слаг'
-    )
-
-    def __str__(self):
-        return self.slug
+    class Meta(CategoryAndGenreBase.Meta):
+        verbose_name = 'Жанр произведения'
+        verbose_name_plural = 'Жанр произведений'
 
 
 def no_future_year(value):
@@ -78,7 +76,7 @@ def no_future_year(value):
 
 
 class Title(models.Model):
-    """Произведения."""
+    """Произведения"""
     name = models.TextField(help_text='Наименование произведения')
     year = models.IntegerField(
         help_text='Год выхода произведения',
