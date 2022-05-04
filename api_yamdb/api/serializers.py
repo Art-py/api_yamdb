@@ -108,10 +108,10 @@ class ReadTitlesSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
 
-    rating = serializers.FloatField(
-        source='reviews__score__avg',
-        read_only=True
-    )
+    # rating = serializers.FloatField(
+    #     source='reviews__score__avg',
+    #     read_only=True
+    # )
 
     class Meta:
         model = Title
