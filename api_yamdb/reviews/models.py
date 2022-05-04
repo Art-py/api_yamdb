@@ -12,9 +12,9 @@ class User(AbstractUser):
     MODERATOR = 'moderator'
     ADMIN = 'admin'
     ROLE_CHOICES = [
-        (USER, 'User'),
-        (MODERATOR, 'Moderator'),
-        (ADMIN, 'Admin'),
+        (USER, 'Пользователь'),
+        (MODERATOR, 'Модератор'),
+        (ADMIN, 'Администратор'),
     ]
     ROLE_MAX_LENGTH = max(len(role[0]) for role in ROLE_CHOICES)
     username = models.CharField(
@@ -39,11 +39,12 @@ class User(AbstractUser):
     email = models.EmailField('Электронная почта', unique=True, max_length=254)
     first_name = models.CharField('Имя', max_length=150, blank=True)
     last_name = models.CharField('Фамилия', max_length=150, blank=True)
-    bio = models.TextField(
-        'Биография',
-        blank=True
+    bio = models.TextField('Биография', blank=True)
+    role = models.CharField(
+        max_length=ROLE_MAX_LENGTH,
+        choices=ROLE_CHOICES,
+        default=USER
     )
-    role = models.CharField(max_length=ROLE_MAX_LENGTH, choices=ROLE_CHOICES, default=USER)
     confirmation_code = models.CharField(
         max_length=settings.CONFIRMATION_CODE_LENGTH,
         null=True
