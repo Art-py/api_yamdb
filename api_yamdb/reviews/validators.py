@@ -9,10 +9,7 @@ USERNAME_REGEX = re.compile(r'^[\w.@+-]+$')
 def validate_username(value):
     if not USERNAME_REGEX.match(value):
         raise ValidationError(
-            message=(
-                'Не более 150 символов, '
-                'допустимы только буквы, цифры и @/./+/-/_',
-            ),
+            message='допустимы только буквы, цифры и @/./+/-/_',
             code='invalid'
         )
     if value == 'me':
