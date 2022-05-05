@@ -1,9 +1,11 @@
 import datetime as dt
 
-from django.contrib.auth.models import AbstractUser
-from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django.db import models
+
+from .validators import UsernameValidator
 
 
 class User(AbstractUser):
@@ -11,27 +13,36 @@ class User(AbstractUser):
     MODERATOR = 'moderator'
     ADMIN = 'admin'
     ROLE_CHOICES = [
-        (USER, 'User'),
-        (MODERATOR, 'Moderator'),
-        (ADMIN, 'Admin'),
+        (USER, 'Пользователь'),
+        (MODERATOR, 'Модератор'),
+        (ADMIN, 'Администратор'),
     ]
-    bio = models.TextField(
-        'Биография',
-        blank=True
+    ROLE_MAX_LENGTH = max(len(role[0]) for role in ROLE_CHOICES)
+    username = models.CharField(
+        'Имя пользователя',
+        max_length=150,
+        unique=True,
+        validators=[
+            UsernameValidator()
+        ]
     )
-    role = models.CharField(max_length=9, choices=ROLE_CHOICES, default=USER)
+    email = models.EmailField('Электронная почта', unique=True, max_length=254)
+    first_name = models.CharField('Имя', max_length=150, blank=True)
+    last_name = models.CharField('Фамилия', max_length=150, blank=True)
+    bio = models.TextField('Биография', blank=True)
+    role = models.CharField(
+        max_length=ROLE_MAX_LENGTH,
+        choices=ROLE_CHOICES,
+        default=USER
+    )
     confirmation_code = models.CharField(
         max_length=settings.CONFIRMATION_CODE_LENGTH,
         null=True
     )
 
-    class Meta(AbstractUser.Meta):
-        constraints = [
-            models.CheckConstraint(
-                check=~models.Q(username__iexact='me'),
-                name='username_me_is_reserved'
-            ),
-        ]
+    @property
+    def is_admin(self):
+        return self.role == User.ADMIN or self.is_superuser or self.is_staff
 
 
 class CategoryAndGenreBase(models.Model):

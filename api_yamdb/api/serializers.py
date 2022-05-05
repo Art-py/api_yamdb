@@ -1,60 +1,43 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
+from .validators import UsernameValidator
 from reviews.models import Category, Genre, Comment, Title, Review
 
 User = get_user_model()
 
 
-class SimpleUserSerializer(serializers.ModelSerializer):
-    """Сериализатор с username и email, используется для регистрации"""
-    class Meta:
+class SignupUserSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150, validators=[UsernameValidator()])
+    email = serializers.EmailField(max_length=254)
+
+
+class TokenRequestSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150, validators=[UsernameValidator()])
+    confirmation_code = serializers.CharField(
+        max_length=settings.CONFIRMATION_CODE_LENGTH
+    )
+
+
+class FullUserSerializer(serializers.ModelSerializer):
+    """Сериализатор для выполнения операций пользователями с ролью ADMIN."""
+    class Meta():
         model = User
         fields = [
             'username',
             'email',
-        ]
-        extra_kwargs = {
-            'email': {
-                'required': True,
-                'validators': [
-                    UniqueValidator(
-                        queryset=User.objects.all(),
-                        message='A user with that email already exists.'
-                    )
-                ],
-            },
-        }
-
-    def validate_username(self, value):
-        if value.lower() == 'me':
-            raise serializers.ValidationError('Username me is reserved.')
-        return value
-
-
-class BasicUserSerializer(SimpleUserSerializer):
-    """Сериализатор для пользователей с ролью не равной ADMIN."""
-    class Meta(SimpleUserSerializer.Meta):
-        fields = SimpleUserSerializer.Meta.fields + [
             'first_name',
             'last_name',
             'bio',
             'role',
         ]
+
+
+class BasicUserSerializer(FullUserSerializer):
+    """Сериализатор для выполнения операций пользователями с ролью не ADMIN."""
+    class Meta(FullUserSerializer.Meta):
         read_only_fields = ['role']
-
-
-class FullUserSerializer(SimpleUserSerializer):
-    """Сериализатор для пользователей с ролью ADMIN."""
-    class Meta(BasicUserSerializer.Meta):
-        read_only_fields = BasicUserSerializer.Meta.read_only_fields[:]
-        read_only_fields.remove('role')
-
-
-class TokenRequestSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    confirmation_code = serializers.CharField()
 
 
 class CategorySerializer(serializers.ModelSerializer):
