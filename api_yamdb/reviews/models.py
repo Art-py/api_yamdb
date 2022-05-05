@@ -88,19 +88,19 @@ def no_future_year(value):
 
 class Title(models.Model):
     """Произведения"""
-    name = models.TextField(help_text='Наименование произведения')
+    name = models.TextField(help_text='Наименование')
     year = models.IntegerField(
-        help_text='Год выхода произведения',
+        help_text='Год выхода',
         validators=[no_future_year]
     )
     description = models.TextField(
-        help_text='Описание произведения',
+        help_text='Описание',
         blank=True
     )
-    genre = models.ManyToManyField(Genre, help_text='Жанр произведения')
+    genre = models.ManyToManyField(Genre, help_text='Жанр')
     category = models.ForeignKey(
         Category,
-        help_text='Категория произведения',
+        help_text='Категория',
         on_delete=models.SET_NULL,
         related_name='titles',
         null=True
