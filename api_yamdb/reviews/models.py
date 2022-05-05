@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from .validators import UsernameValidator
+from .validators import validate_username
 
 
 class User(AbstractUser):
@@ -23,9 +23,7 @@ class User(AbstractUser):
         'Имя пользователя',
         max_length=150,
         unique=True,
-        validators=[
-            UsernameValidator()
-        ]
+        validators=[validate_username]
     )
     email = models.EmailField('Электронная почта', unique=True, max_length=254)
     first_name = models.CharField('Имя', max_length=150, blank=True)
