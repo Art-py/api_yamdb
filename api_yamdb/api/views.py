@@ -140,8 +140,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsReadOnly | IsAdmin, )
-    queryset = Title.objects.all().annotate(
-        rating=Avg("reviews__score")
+    queryset = Title.objects.all().order_by('name').annotate(
+        rating=Avg('reviews__score')
     )
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
