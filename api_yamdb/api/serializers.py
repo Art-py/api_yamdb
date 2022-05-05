@@ -9,12 +9,18 @@ User = get_user_model()
 
 
 class SignupUserSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150, validators=[UsernameValidator()])
+    username = serializers.CharField(
+        max_length=150,
+        validators=[UsernameValidator()]
+    )
     email = serializers.EmailField(max_length=254)
 
 
 class TokenRequestSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150, validators=[UsernameValidator()])
+    username = serializers.CharField(
+        max_length=150,
+        validators=[UsernameValidator()]
+    )
     confirmation_code = serializers.CharField(
         max_length=settings.CONFIRMATION_CODE_LENGTH
     )
@@ -22,7 +28,7 @@ class TokenRequestSerializer(serializers.Serializer):
 
 class FullUserSerializer(serializers.ModelSerializer):
     """Сериализатор для выполнения операций пользователями с ролью ADMIN."""
-    class Meta():
+    class Meta:
         model = User
         fields = [
             'username',

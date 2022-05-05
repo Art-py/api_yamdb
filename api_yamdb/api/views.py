@@ -3,8 +3,8 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db import models
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Avg, Sum
-from rest_framework import filters, serializers, viewsets
+from django.db.models import Avg
+from rest_framework import filters, viewsets
 from rest_framework import permissions
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
@@ -43,8 +43,13 @@ def signup(request):
         return Response(f'Имя "{username}" занято.', status=400)
     query = ~models.Q(username=username) & models.Q(email=email)
     if User.objects.filter(query).exists():
-        return Response(f'На адрес "{email}" зарегистрирован другой пользователь.', status=400)
-    confirmation_code = generate_confirmation_code(settings.CONFIRMATION_CODE_LENGTH)
+        return Response(
+            f'На адрес "{email}" зарегистрирован другой пользователь.',
+            status=400
+        )
+    confirmation_code = generate_confirmation_code(
+        settings.CONFIRMATION_CODE_LENGTH
+    )
     user = User.objects.get_or_create(**serializer.validated_data)[0]
     user.confirmation_code = confirmation_code
     user.save()
