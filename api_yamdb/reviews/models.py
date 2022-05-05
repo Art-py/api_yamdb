@@ -1,11 +1,8 @@
-import datetime as dt
-
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
 from django.db import models
 
-from .validators import UsernameValidator
+from .validators import UsernameValidator, no_future_year
 
 
 class User(AbstractUser):
@@ -77,13 +74,6 @@ class Genre(CategoryAndGenreBase):
     class Meta(CategoryAndGenreBase.Meta):
         verbose_name = 'Жанр произведения'
         verbose_name_plural = 'Жанр произведений'
-
-
-def no_future_year(value):
-    if value > dt.date.today().year:
-        raise ValidationError(
-            'Год выхода произведения не может быть больше текущего!'
-        )
 
 
 class Title(models.Model):
