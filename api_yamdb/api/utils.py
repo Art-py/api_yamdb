@@ -1,7 +1,7 @@
 import random
 import string
 
-CONFIRMATION_CODE_CHARACTERS = string.digits+string.ascii_letters
+CONFIRMATION_CODE_CHARACTERS = string.digits + string.ascii_letters
 
 
 def generate_confirmation_code(length):

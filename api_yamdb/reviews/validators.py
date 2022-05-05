@@ -4,7 +4,7 @@ from django.core.validators import RegexValidator
 
 class UsernameValidator(RegexValidator):
     regex = r'^[\w.@+-]{1,150}$'
-    message=(
+    message = (
         'Не более 150 символов, '
         'допустимы только буквы, цифры и @/./+/-/_'
     )
@@ -14,7 +14,10 @@ class UsernameValidator(RegexValidator):
         try:
             super().__call__(value)
             if value == 'me':
-                raise ValidationError('Имя пользователя me не может быть использовано', code='invalid')
+                raise ValidationError(
+                    'Имя пользователя me не может быть использовано',
+                    code='invalid'
+                )
         except ValidationError as e:
             if self.exception:
                 raise self.exception(e.message, code=e.code)
