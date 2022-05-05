@@ -96,6 +96,9 @@ class Title(models.Model):
         null=True
     )
 
+    class Meta:
+        ordering = ['name']
+
 
 class ReviewAndCommentBase(models.Model):
     text = models.TextField()
