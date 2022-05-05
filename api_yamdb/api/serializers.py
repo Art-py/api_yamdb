@@ -75,15 +75,17 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'text', 'author', 'score', 'pub_date')
         model = Review
 
+
+class ReviewCreateSerializer(ReviewSerializer):
+
     def validate(self, data):
         if Review.objects.filter(
-            author=self.context.get('request').user.id,
-            title=self._context['request'].parser_context['kwargs']['title_id']
+                author=self.context.get('request').user.id,
+                title=self.context['view'].kwargs.get('title_id')
         ).exists():
-            if self.context.get('request').method != 'PATCH':
-                raise serializers.ValidationError(
-                    'Нельзя писать второй отзыв!'
-                )
+            raise serializers.ValidationError(
+                'Нельзя писать второй отзыв!'
+            )
         return data
 
 
