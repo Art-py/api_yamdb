@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from django.db import models
+from django.db import IntegrityError
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Avg
 from rest_framework import filters, viewsets
@@ -36,21 +36,19 @@ User = get_user_model()
 def signup(request):
     serializer = SignupUserSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    username = serializer.validated_data['username']
-    email = serializer.validated_data['email']
-    query = models.Q(username=username) & ~models.Q(email=email)
-    if User.objects.filter(query).exists():
-        return Response(f'Имя "{username}" занято.', status=400)
-    query = ~models.Q(username=username) & models.Q(email=email)
-    if User.objects.filter(query).exists():
+    try:
+        user = User.objects.get_or_create(
+            username=serializer.validated_data['username'],
+            email=serializer.validated_data['email'],
+        )[0]
+    except IntegrityError:
         return Response(
-            f'На адрес "{email}" зарегистрирован другой пользователь.',
+            'Имя пользователя или электронная почта занята другим пользователем',
             status=400
         )
     confirmation_code = generate_confirmation_code(
         settings.CONFIRMATION_CODE_LENGTH
     )
-    user = User.objects.get_or_create(**serializer.validated_data)[0]
     user.confirmation_code = confirmation_code
     user.save()
     user.email_user(
