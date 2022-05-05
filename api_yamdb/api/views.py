@@ -46,10 +46,9 @@ def signup(request):
             'Имя пользователя или электронная почта занята другим пользователем',
             status=400
         )
-    confirmation_code = generate_confirmation_code(
+    user.confirmation_code = generate_confirmation_code(
         settings.CONFIRMATION_CODE_LENGTH
     )
-    user.confirmation_code = confirmation_code
     user.save()
     user.email_user(
         subject='Код подтверждения',
