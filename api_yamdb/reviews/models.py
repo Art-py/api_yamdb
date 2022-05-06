@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from .validators import UsernameValidator, no_future_year
@@ -111,7 +113,7 @@ class ReviewAndCommentBase(models.Model):
 class Review(ReviewAndCommentBase):
     """Текстовые отзывы к произведениям."""
 
-    score = models.IntegerField()
+    score = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
