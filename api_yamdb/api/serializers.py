@@ -3,25 +3,24 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from .validators import UsernameValidator
+from reviews.validators import validate_username
 from reviews.models import Category, Genre, Comment, Title, Review
 
 User = get_user_model()
 
 
-class SignupUserSerializer(serializers.Serializer):
+class SimpleUserSerializer(serializers.Serializer):
     username = serializers.CharField(
         max_length=150,
-        validators=[UsernameValidator()]
+        validators=[validate_username]
     )
+
+
+class SignupUserSerializer(SimpleUserSerializer):
     email = serializers.EmailField(max_length=254)
 
 
-class TokenRequestSerializer(serializers.Serializer):
-    username = serializers.CharField(
-        max_length=150,
-        validators=[UsernameValidator()]
-    )
+class TokenRequestSerializer(SimpleUserSerializer):
     confirmation_code = serializers.CharField(
         max_length=settings.CONFIRMATION_CODE_LENGTH
     )

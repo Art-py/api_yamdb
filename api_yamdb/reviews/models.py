@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from .validators import UsernameValidator, no_future_year
+from .validators import validate_username, no_future_year
 
 
 class User(AbstractUser):
@@ -16,22 +16,19 @@ class User(AbstractUser):
         (MODERATOR, 'Модератор'),
         (ADMIN, 'Администратор'),
     ]
-    ROLE_MAX_LENGTH = max(len(role[0]) for role in ROLE_CHOICES)
     username = models.CharField(
         'Имя пользователя',
         max_length=150,
         unique=True,
-        validators=[
-            UsernameValidator()
-        ]
+        validators=[validate_username]
     )
     email = models.EmailField('Электронная почта', unique=True, max_length=254)
     first_name = models.CharField('Имя', max_length=150, blank=True)
     last_name = models.CharField('Фамилия', max_length=150, blank=True)
     bio = models.TextField('Биография', blank=True)
     role = models.CharField(
-        max_length=ROLE_MAX_LENGTH,
         choices=ROLE_CHOICES,
+        max_length=max(len(role) for role, _ in ROLE_CHOICES),
         default=USER
     )
     confirmation_code = models.CharField(
@@ -41,7 +38,11 @@ class User(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == User.ADMIN or self.is_superuser or self.is_staff
+        return self.role == User.ADMIN or self.is_staff
+
+    @property
+    def is_moderator(self):
+        return self.role == User.MODERATOR
 
 
 class CategoryAndGenreBase(models.Model):
@@ -113,7 +114,9 @@ class ReviewAndCommentBase(models.Model):
 class Review(ReviewAndCommentBase):
     """Текстовые отзывы к произведениям."""
 
-    score = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    score = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
