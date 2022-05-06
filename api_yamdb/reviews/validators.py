@@ -16,6 +16,8 @@ def validate_username(value):
         raise ValidationError(
             'Имя пользователя me не может быть использовано',
             code='invalid'
+        )
+
     def __call__(self, value):
         try:
             super().__call__(value)
