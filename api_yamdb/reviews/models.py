@@ -42,6 +42,10 @@ class User(AbstractUser):
     def is_admin(self):
         return self.role == User.ADMIN or self.is_staff
 
+    @property
+    def is_moderator(self):
+        return self.role == User.MODERATOR
+
 
 class CategoryAndGenreBase(models.Model):
     name = models.CharField(
