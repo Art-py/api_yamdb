@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from .validators import UsernameValidator
@@ -85,10 +86,10 @@ class ReviewSerializer(serializers.ModelSerializer):
 class ReviewCreateSerializer(ReviewSerializer):
 
     def validate(self, data):
-        if Review.objects.filter(
-                author=self.context.get('request').user.id,
-                title=self.context['view'].kwargs.get('title_id')
-        ).exists():
+        title_id = self.context['view'].kwargs.get('title_id')
+        author = self.context.get('request').user
+        title = get_object_or_404(Title, id=title_id)
+        if title.reviews.filter(author=author).exists():
             raise serializers.ValidationError(
                 'Нельзя писать второй отзыв!'
             )
