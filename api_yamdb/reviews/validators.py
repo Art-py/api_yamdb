@@ -1,3 +1,5 @@
+import datetime as dt
+
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
@@ -22,3 +24,10 @@ class UsernameValidator(RegexValidator):
             if self.exception:
                 raise self.exception(e.message, code=e.code)
             raise
+
+
+def no_future_year(value):
+    if value > dt.date.today().year:
+        raise ValidationError(
+            f'Год выхода произведения: {value}, не может быть больше текущего!'
+        )
