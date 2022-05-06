@@ -123,7 +123,9 @@ class ReviewAndCommentBase(models.Model):
 class Review(ReviewAndCommentBase):
     """Текстовые отзывы к произведениям."""
 
-    score = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    score = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,

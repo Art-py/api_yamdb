@@ -43,7 +43,7 @@ def signup(request):
         )[0]
     except IntegrityError:
         return Response(
-            'Имя пользователя или электронная почта занята другим пользователем',
+            'Имя пользователя или электронная почта занята',
             status=400
         )
     user.confirmation_code = generate_confirmation_code(
