@@ -103,7 +103,9 @@ class ReadTitlesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = ('__all__')
+        fields = ('id', 'name', 'year',
+                  'rating', 'description', 'genre', 'category'
+                  )
 
 
 class UpdateTitlesSerializer(serializers.ModelSerializer):

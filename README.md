@@ -62,34 +62,6 @@ python manage.py runserver
 3. Пользователь отправляет POST-запрос с параметрами `username` и `confirmation_code` на эндпоинт `/api/v1/auth/token/`, в ответе на запрос ему приходит `token` (JWT-токен).
 4. При желании пользователь отправляет PATCH-запрос на эндпоинт `/api/v1/users/me/` и заполняет поля в своём профайле.
 
-#### API для Категорий
-
-| Запрос | Описание | Endpoint | json в теле запроса | Ответ |
-|:-|:-|:-|:-:|:-:|
-|`GET`|Получение списка всех категорий|`/api/v1/categories/`| | `{"count": 0,"next": "string","previous": "string","results": [{"name": "string","slug": "string"}]}` |
-|`POST`|Добавление новой категории|`/api/v1/categories/`|`{"name": "string","slug": "string"}`|`{"name": "string","slug": "string"}`|`{"name": "string","slug": "string"}`|`{"name": "string","slug": "string"}`|
-|`DELETE`|Удаление категории|`/api/v1/categories/{slug}/`| | |
-
-#### API для Жанров
-
-| Запрос | Описание | Endpoint | json в теле запроса | Ответ |
-|:-|:-|:-|:-:|:-:|
-|`GET`|Получение списка всех жанров|`/api/v1/genres/`||`{"count": 0,"next": "string","previous": "string","results": [{"name": "string","slug": "string"}]}`|
-|`POST`|Добавление нового жанра|`/api/v1/genres/`| `{"name": "string","slug": "string"}`|`{"name": "string","slug": "string"}`| `{"name": "string","slug": "string"}`|`{"name": "string","slug": "string"}`|
-|`DELETE`|Удаление жанра|`/api/v1/genres/{slug}/`| | |
-
-#### API для Произведений
-
-| Запрос | Описание | Endpoint | json в теле запроса | Ответ |
-|:-|:-|:-|:-:|:-:|
-|`GET`|Получение списка всех произведений|`/api/v1/titles/`||`{"count": 0,"next": string","previous": "string","results": [{"id": 0,"name": "string","year": 0,"rating": 0,"description": "string","genre": [{"name": "string","slug": "string"}],"category": {"name": "string","slug": "string"}}]}`|
-|`POST`|Добавление произведения|`/api/v1/titles/`|`{"name": "string","year": ,"description": "string","genre": ["string"],"category": "string"}`|`{"id": 0,"name": "string","year": 0,"rating": 0,"description": string","genre": [{"name": "string","slug": "string"}],"category": {"name": "string","slug": "string"}}`|
-|`GET`|Получение информации о произведении|`/api/v1/titles/{titles_id}/`||`{  "id": 0,  name": "string",  "year": 0,  "rating": 0,  "description": "string",  "genre": [    {      name": "string",      "slug": "string"    }  ],  "category": {    "name": "string",    slug": "string"  }}`|
-|`PATCH`|Частичное обновление информации о произведении|`/api/v1/titles/{titles_id}/`|`{  "name": string",  "year": 0,  "description": "string",  "genre": [    "string"  ],  "category": "string"}`|`{  "id": 0,  "name": "string",  "year": 0,  "rating": 0,  "description": "string",  "genre": [    {      "name": "string",      "slug": "string"    }  ],  "category": {    "name": "string",    "slug": "string"  }}`|
-|`DELETE`|Удаление произведения|`/api/v1/titles/{titles_id}/`|||
-
-#### Аналогично для Отзывов и Комментариев (подробнее в документациик API)
-
 ## Авторы проекта
 
 - Жуков Артем - [Art-py](https://github.com/Art-py)
