@@ -24,7 +24,11 @@ from .serializers import (
     TokenRequestSerializer,
     ReviewCreateSerializer,
 )
-from .permissions import IsReadOnlyOrIsAuthorOrIsAdminOrIsModerator, IsReadOnly, IsAdmin
+from .permissions import (
+    IsReadOnlyOrIsAuthorOrIsAdminOrIsModerator,
+    IsReadOnly,
+    IsAdmin
+)
 from reviews.models import Category, Genre, Review, Title
 from .utils import generate_confirmation_code
 from .filters import TitleFilter
