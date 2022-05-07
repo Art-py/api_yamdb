@@ -14,7 +14,7 @@ class IsReadOnly(permissions.BasePermission):
         return request.method in permissions.SAFE_METHODS
 
 
-class CommentsReviewsPermission(permissions.BasePermission):
+class IsReadOnlyOrIsAuthorOrIsAdminOrIsModerator(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return (
@@ -25,7 +25,11 @@ class CommentsReviewsPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return (
             request.method in permissions.SAFE_METHODS
-            or request.user == obj.author
-            or request.user.is_admin
-            or request.user.is_moderator
+            or (
+                request.user.is_authenticated and (
+                    request.user == obj.author
+                    or request.user.is_admin
+                    or request.user.is_moderator
+                )
+            )
         )
