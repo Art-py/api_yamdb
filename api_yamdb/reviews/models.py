@@ -106,8 +106,8 @@ class ReviewAndCommentBase(models.Model):
 
     class Meta:
         abstract = True
-        default_related_name = '%(model_name)s'
-        ordering = ['-pub_date']
+        default_related_name = '%(model_name)ss'
+        ordering = ('-pub_date',)
 
 
 class Review(ReviewAndCommentBase):
@@ -122,7 +122,7 @@ class Review(ReviewAndCommentBase):
         related_name='reviews'
     )
 
-    class Meta:
+    class Meta(ReviewAndCommentBase.Meta):
         constraints = [
             models.UniqueConstraint(
                 fields=['author', 'title'],
