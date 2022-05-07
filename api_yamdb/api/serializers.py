@@ -9,18 +9,18 @@ from reviews.models import Category, Genre, Comment, Title, Review
 User = get_user_model()
 
 
-class SimpleUserSerializer(serializers.Serializer):
+class UsernameSerializer(serializers.Serializer):
     username = serializers.CharField(
         max_length=150,
         validators=[validate_username]
     )
 
 
-class SignupUserSerializer(SimpleUserSerializer):
+class SignupUserSerializer(UsernameSerializer):
     email = serializers.EmailField(max_length=254)
 
 
-class TokenRequestSerializer(SimpleUserSerializer):
+class TokenRequestSerializer(UsernameSerializer):
     confirmation_code = serializers.CharField(
         max_length=settings.CONFIRMATION_CODE_LENGTH
     )

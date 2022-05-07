@@ -24,7 +24,7 @@ from .serializers import (
     TokenRequestSerializer,
     ReviewCreateSerializer,
 )
-from .permissions import CommentsReviewsPermission, IsReadOnly, IsAdmin
+from .permissions import IsReadOnlyOrIsAuthorOrIsAdminOrIsModerator, IsReadOnly, IsAdmin
 from reviews.models import Category, Genre, Review, Title
 from .utils import generate_confirmation_code
 from .filters import TitleFilter
@@ -102,7 +102,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = (CommentsReviewsPermission,)
+    permission_classes = (IsReadOnlyOrIsAuthorOrIsAdminOrIsModerator,)
 
     def get_queryset(self):
         return self.get_review().comments.all()
@@ -117,7 +117,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = (CommentsReviewsPermission,)
+    permission_classes = (IsReadOnlyOrIsAuthorOrIsAdminOrIsModerator,)
 
     def get_queryset(self):
         return self.get_title().reviews.all()
