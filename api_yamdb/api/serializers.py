@@ -96,6 +96,7 @@ class ReviewCreateSerializer(ReviewSerializer):
 
 
 class ReadTitlesSerializer(serializers.ModelSerializer):
+
     genre = GenreSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
 
@@ -103,9 +104,8 @@ class ReadTitlesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = ('id', 'name', 'year',
-                  'rating', 'description', 'genre', 'category'
-                  )
+        fields = ('__all__')
+        read_only_fields = ['id', 'name', 'year', 'description']
 
 
 class UpdateTitlesSerializer(serializers.ModelSerializer):
