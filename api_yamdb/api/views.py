@@ -152,6 +152,9 @@ class TitleViewSet(viewsets.ModelViewSet):
             return ReadTitlesSerializer
         return UpdateTitlesSerializer
 
+    class Meta:
+        ordering = ['name']
+
 
 class CategoryViewSet(GenresCategoriesViewSet):
     queryset = Category.objects.all()
