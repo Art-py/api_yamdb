@@ -17,6 +17,11 @@ class IsReadOnly(permissions.BasePermission):
 class IsReadOnlyOrIsAuthorOrIsAdminOrIsModerator(permissions.BasePermission):
 
     def has_permission(self, request, view):
+        # Проверяем, что пользователь отправил безопасный запрос,
+        # или он аутентифицирован.
+        # Так как без данного метода не аутентифицированному пользователю
+        # будет разрешено отправлять POST запросы,
+        # Что противоречит логике пермишена.
         return (
             request.method in permissions.SAFE_METHODS
             or request.user.is_authenticated
