@@ -107,7 +107,7 @@ class ReadTitlesSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'year',
                   'rating', 'genre', 'category', 'description'
                   )
-        read_only_fields = ('__all__')
+        read_only_fields = ['__all__']
 
 
 class UpdateTitlesSerializer(serializers.ModelSerializer):
