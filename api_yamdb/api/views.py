@@ -141,19 +141,16 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsReadOnly | IsAdmin, )
-    queryset = Title.objects.all().annotate(
-        rating=Avg('reviews__score')
-    )
+    queryset = Title.objects.all().annotate(rating=Avg('reviews__score'))
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
+
+    ordering_fields = ['name', 'rating']
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ReadTitlesSerializer
         return UpdateTitlesSerializer
-
-    class Meta:
-        ordering = ['name']
 
 
 class CategoryViewSet(GenresCategoriesViewSet):
