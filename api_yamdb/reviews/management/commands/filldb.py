@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from reviews.models import (Category, Comment, Genre, Review, Title)
 
 User = get_user_model()
-DATA_DIR = os.path.join(settings.STATICFILES_DIRS[0], 'data')
+DATA_DIR = os.path.join(settings.BASE_DIR, 'static', 'data')
 
 
 class Command(BaseCommand):
